@@ -7,14 +7,15 @@ function main() {
 			return;
 		}
 		let data = {};
-		data.opacity = el.dataset.animLoadOpacity || 0;
 		data.x = el.dataset.animLoadX || 0;
 		data.y = el.dataset.animLoadY || 0;
 		data.duration = el.dataset.animLoadDuration || 1;
-		data.ease = el.dataset.animLoadEase || "power2.out";
-		data.start = el.dataset.animLoadStart || "top 80%";
-		data.end = el.dataset.animLoadEnd || "top 30%";
-		data.stagger = el.dataset.animLoadstagger || 0;
+		data.ease = el.dataset.animLoadEase || "power2.inOut";
+		data.start = el.dataset.animLoadStart || "top 60%";
+		// data.end = el.dataset.animLoadEnd || "top 30%";
+		data.stagger = el.dataset.animLoadstagger || 0.1;
+		data.enabled = el.dataset.animLoad || true;
+		console.log(data);
 		return data;
 	}
 
@@ -28,12 +29,12 @@ function main() {
 			gsap.fromTo(
 				el,
 				{
-					opacity: settings.opacity,
+					autoAlpha: 0,
 					x: settings.x,
 					y: settings.y,
 				},
 				{
-					opacity: 1,
+					autoAlpha: 1,
 					x: 0,
 					y: 0,
 					duration: parseFloat(settings.duration),
@@ -41,9 +42,9 @@ function main() {
 					scrollTrigger: {
 						trigger: el,
 						start: settings.start,
-						end: settings.end,
-						toggleActions: "play none none none",
-						// markers: true, // Uncomment for debugging
+						// end: settings.end,
+						// toggleActions: "play none none none",
+						markers: true, // Uncomment for debugging
 					},
 				}
 			);
@@ -57,30 +58,55 @@ function main() {
 			const children = parent.querySelectorAll(".anim-load-child");
 
 			// check for any overrides
-			let settings = getAnimLoadSettings(el);
+			let settings = getAnimLoadSettings(parent);
 
-			gsap.fromTo(
+			// timeline
+			let tl = gsap.timeline();
+
+			// animate in parent if enabled
+			if (settings.enabled) {
+				tl.fromTo(
+					parent,
+					{
+						autoAlpha: 0,
+						x: settings.x,
+						y: settings.y,
+					},
+					{
+						autoAlpha: 1,
+						x: 0,
+						y: 0,
+						duration: parseFloat(settings.duration),
+						ease: settings.ease,
+						stagger: settings.stagger,
+						scrollTrigger: {
+							trigger: parent,
+							start: settings.start,
+							// end: settings.end,
+							// toggleActions: "play none none none",
+						},
+					}
+				);
+			}
+
+			// animate in children
+			tl.fromTo(
 				children,
+
 				{
-					opacity: settings.opacity,
+					autoAlpha: 0,
 					x: settings.x,
 					y: settings.y,
 				},
 				{
-					opacity: 1,
+					autoAlpha: 1,
 					x: 0,
 					y: 0,
 					duration: parseFloat(settings.duration),
 					ease: settings.ease,
 					stagger: settings.stagger,
-					scrollTrigger: {
-						trigger: el,
-						start: settings.start,
-						end: settings.end,
-						toggleActions: "play none none none",
-						// markers: true, // Uncomment for debugging
-					},
-				}
+				},
+				"<50%" // start child animation halfway through parent animation
 			);
 		});
 	}
