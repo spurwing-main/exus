@@ -48,7 +48,6 @@ function main() {
 						start: settings.start,
 						// end: settings.end,
 						// toggleActions: "play none none none",
-						markers: true, // Uncomment for debugging
 					},
 				}
 			);
