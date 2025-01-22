@@ -522,6 +522,9 @@ function main() {
 
 		// get current region
 		exusData.mapRegion = mapEl.dataset.mapRegion || "world";
+		if (exusData.mapRegion == "latam") {
+			exusData.mapRegion = "latin-america";
+		}
 
 		//load tiles
 		L.tileLayer(
