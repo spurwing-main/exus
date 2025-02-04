@@ -1,148 +1,7 @@
 function main() {
 	gsap.registerPlugin(ScrollTrigger);
-	// initLoadAnimations();
-	// initNestedLoadAnimations();
-	// initNestedLoadAnimations_2();
 	initTabAnimations();
 	initMap();
-
-	function getAnimLoadSettings(el) {
-		if (!el) {
-			return;
-		}
-		let data = {};
-		data.x = el.dataset.animLoadX || 0;
-		data.y = el.dataset.animLoadY || 0;
-		data.duration = el.dataset.animLoadDuration || 1;
-		data.ease = el.dataset.animLoadEase || "power2.inOut";
-		data.start = el.dataset.animLoadStart || "top 60%";
-		// data.end = el.dataset.animLoadEnd || "top 30%";
-		data.stagger = el.dataset.animLoadstagger || 0.1;
-		data.enabled = el.dataset.animLoad || true;
-		return data;
-	}
-
-	function initLoadAnimations() {
-		const elements = gsap.utils.toArray(":is(.anim-load, .anim-load-parent)");
-
-		elements.forEach((el) => {
-			// check for any overrides
-			let settings = getAnimLoadSettings(el);
-
-			console.log(el);
-
-			gsap.fromTo(
-				el,
-				{
-					autoAlpha: 0,
-					x: settings.x,
-					y: settings.y,
-				},
-				{
-					autoAlpha: 1,
-					x: 0,
-					y: 0,
-					duration: parseFloat(settings.duration),
-					ease: settings.ease,
-					scrollTrigger: {
-						trigger: el,
-						start: settings.start,
-						// end: settings.end,
-						// toggleActions: "play none none none",
-					},
-				}
-			);
-		});
-	}
-
-	function initNestedLoadAnimations() {
-		const parents = gsap.utils.toArray(".anim-load-parent");
-
-		parents.forEach((parent) => {
-			const children = parent.querySelectorAll(".anim-load-child");
-
-			console.log(parent);
-			console.log(children);
-
-			// check for any overrides
-			let settings = getAnimLoadSettings(parent);
-
-			// timeline
-			let tl = gsap.timeline();
-
-			// animate in parent if enabled
-			tl.fromTo(
-				parent,
-				{
-					autoAlpha: 0,
-					// x: settings.x,
-					// y: settings.y,
-				},
-				{
-					autoAlpha: 1,
-					// x: 0,
-					// y: 0,
-					duration: parseFloat(settings.duration),
-					ease: settings.ease,
-					scrollTrigger: {
-						trigger: parent,
-						start: settings.start,
-						// end: settings.end,
-						// toggleActions: "play none none none",
-					},
-				}
-			);
-
-			// animate in children
-			tl.fromTo(
-				children,
-
-				{
-					autoAlpha: 0,
-					// x: settings.x,
-					// y: settings.y,
-				},
-				{
-					autoAlpha: 1,
-					// x: 0,
-					// y: 0,
-					duration: parseFloat(settings.duration),
-					ease: settings.ease,
-					stagger: settings.stagger,
-				},
-				"<50%" // start child animation halfway through parent animation
-			);
-		});
-	}
-
-	function initNestedLoadAnimations_2() {
-		ScrollTrigger.batch(".anim-load-parent", {
-			start: "top 75%", // scroll location that triggers parent anim
-
-			onEnter: (batch) => {
-				batch.forEach((parent, index) => {
-					let child = parent.querySelectorAll(".anim-load-child");
-					let parent_tl = gsap.timeline();
-					parent_tl.to(parent, 1, {
-						x: "0%",
-						autoAlpha: 1,
-						stagger: 0.5,
-					});
-					parent_tl.to(
-						child,
-						1,
-						{
-							// x: "0%",
-							y: "0%",
-							autoAlpha: 1,
-							stagger: 0.35,
-						},
-						"<50%"
-					); // start child animation halfway through parent animation
-				});
-			},
-		});
-	}
 
 	function initTabAnimations() {
 		// Select all sections on the page
@@ -283,7 +142,7 @@ function main() {
 				tileSize: 512,
 				zoomOffset: -1,
 				accessToken:
-					"pk.eyJ1Ijoic3B1cndpbmctc3AiLCJhIjoiY202N3Y3N2dlMDg3NTJ3czhqbzFweWMwMiJ9.t0VqzflzEIyan_e7033uFQ",
+					"pk.eyJ1IjoiZXh1c3JlbmV3YWJsZXNldXJvcGUiLCJhIjoiY202cWN0MXVuMHdjejJqcGR0ZnNrbnhpZyJ9.r6f3dWLC7WUuI_U0dkXSpg",
 			}
 		).addTo(map);
 
